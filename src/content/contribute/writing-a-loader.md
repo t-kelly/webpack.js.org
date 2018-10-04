@@ -309,7 +309,19 @@ export default (fixture, options = {}) => {
 
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
-      if (err || stats.hasErrors()) reject(err);
+      if (err) {
+        reject(err);
+      }
+
+      const info = stats.toJson();
+
+      if (stats.hasErrors()) {
+        reject(info.errors);
+      }
+
+      if (stats.hasWarnings()) {
+        reject(info.warnings);
+      }
 
       resolve(stats);
     });
